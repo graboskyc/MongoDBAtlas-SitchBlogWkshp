@@ -1,0 +1,22 @@
+{
+    "id": "5d077e16b6821d679203e965",
+    "database": "nycblog",
+    "collection": "welcome",
+    "roles": [
+        {
+            "name": "default",
+            "apply_when": {},
+            "write": true,
+            "insert": true,
+            "delete": true,
+            "additional_fields": {}
+        }
+    ],
+    "schema": {
+        "properties": {
+            "_id": {
+                "bsonType": "objectId"
+            }
+        }
+    }
+}

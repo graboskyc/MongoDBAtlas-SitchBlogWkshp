@@ -1,0 +1,12 @@
+{
+    "app_id": "nycblog2-uqedx",
+    "config_version": 20180301,
+    "name": "nycblog2",
+    "location": "US-VA",
+    "deployment_model": "LOCAL",
+    "security": {},
+    "hosting": {
+        "enabled": true,
+        "app_default_domain": "nycblog2-uqedx.mongodbstitch.com"
+    }
+}
