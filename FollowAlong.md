@@ -1,4 +1,4 @@
-## Background: 
+# Background: 
 
 Though this interactive part of the workshop, we will be following along together in building a sample blog using MongoDB Atlas and MongoDB Stitch. Prerequisites are that you have deployed a MongoDB Atlas cluster (an M0 free-tier will suffice) and created a Stitch App tied to that cluster.
 
@@ -7,7 +7,7 @@ https://docs.mongodb.com/stitch/tutorials/blog-overview/ or via a shortened link
 
 If at any time you have questions, please raise your hand a MongoDB expert will be around to assist.
 
-## A Basic Blog:
+# A Basic Blog:
 * Create an HTML file (here called blog.html or index.html)
 
 ![](images/ss01.png)
