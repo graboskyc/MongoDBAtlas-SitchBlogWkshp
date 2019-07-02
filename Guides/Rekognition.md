@@ -2,7 +2,7 @@
 
 This is an interactive portion of the workshop. The end state is that we will create a database trigger that, when a document is inserted with an attribute called `URL` that it will call the AWS Rekcognition API to describe what the JPEG is a picture of.
 
-Normally this can be done with the native AWS object. However here if students do not have access to AWS, we can use this scenario.
+Here will do this with the AWS object within Stitch.
 
 The cluster should already be deployed so follow that tutorial first.
 
@@ -21,6 +21,20 @@ The cluster should already be deployed so follow that tutorial first.
 
 * On the left, choose "Services" under "Control" 
 * Press the green "Add a Service" in the top right
+
+![](images/ss18.png)
+
+* In the "Add a Service" page, choose the "AWS" service, give it a name (here I chose aws), complete filling in the form with your AWS Access Key ID, create a new secret and store it in Secret Access Key Value, then press the green "Add Service" button
+
+![](images/ss24.png)
+
+* Add a rule by giving it a name, here rek, then click the green "Add Rule"
+* Click on rek
+* In the drop down choose the API of rekognition and the action of DetectLabels then save
+
+![](images/ss25.png)
+
+* Add another service. Press the green "Add a Service" in the top right
 
 ![](images/ss18.png)
 
@@ -66,24 +80,30 @@ exports = async function(changeEvent) {
   if(doc.hasOwnProperty('url')){
     // handler to db
     var conn = context.services.get("mongodb-atlas").db("rek").collection("rek");
-    // we created that http service earlier called hook
+    // we created these two services earlier
+    const aws = context.services.get('aws');
     const httpService = context.services.get("hook");
     
-    // this is the url given by the instructor
-    var instructorURL = "https://webhooks.mongodb-stitch.com/api/client/v2.0/app/wkshp-utilities-dwzzy/service/hook/incoming_webhook/detectLabels?secret=mongodb&uri=";
-    var restEndpoint =  instructorURL + doc.url;
+    // aws rekognition expects a bit stream, not the path to the image
+    // so do an http get to get the image first
+    var uri = doc.url
+    var args = {"url":uri, "headers": {"Content-Type":["image/jpeg"]}};
+    var req = httpService.get(args);
+    var img = await req;
     
-    // make a HTTP GET request to the instructorURL which is asyncronous so wait for it
-    var result = httpService.get({url:restEndpoint});
-    var rek = await result;
+    // we now have the bits making up the image. pass them to aws rek
+    try {
+        var awsreq = aws.rekognition().DetectLabels({"Image": {"Bytes":img.body}});
+        var res = await awsreq;
+        // update  that mongodb document with the response
+        // here we set the rek attribute to what the API returned
+        conn.updateOne({_id:doc._id},{$set: {rek: res}});
+      } catch (error) {
+        console.log(JSON.stringify(error));
+      }
     
-    // update  that mongodb document with the response
-    // here we set the rek attribute to what the API returned
-    // we use EJSON to handle more complex data types like $numberDouble etc
-    conn.updateOne({_id:doc._id},{$set: {rek: EJSON.parse(rek.body.text())}});
   }
 };
-
 ```
 
 * save the trigger
@@ -96,5 +116,6 @@ exports = async function(changeEvent) {
 
 MongoDB Atlas and Stitch have extra features up its sleeve to improve this section. Here are some examples you may be interested in furthering this application: 
 
-* Attatch your own AWS credentials to Stitch and implement rekognition directly
-* See the [Rekognition.md](Rekognition.md) example
+* Try using the S3 API within stitch to query or put files there
+* Make a web page using MongoDB Stitch QueryAnywhere to show these records
+* Upload that webpage to Stitch Hosting

@@ -1,7 +1,0 @@
-{
-    "id": "5d1b80b39d27efb3128ead03",
-    "name": "rek",
-    "actions": [
-        "rekognition:DetectLabels"
-    ]
-}
