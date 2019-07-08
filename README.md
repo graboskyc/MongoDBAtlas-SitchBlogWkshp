@@ -97,3 +97,6 @@ In this example, they would query `https://webhooks.mongodb-stitch.com/api/clien
 }
 ```
 when the URL was the Statue of Liberty.
+
+## Follow Along Workshop
+If working at your own pace or you want to copy/paste the CRUD and agg queries, they are available [here](Guides/CRUD.md).
